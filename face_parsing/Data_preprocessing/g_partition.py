@@ -1,21 +1,26 @@
 import os
 import shutil
-import pandas as pd
 from shutil import copyfile
+
+import pandas as pd
+from dotenv import load_dotenv
 from utils import make_folder
 
+load_dotenv()
+DATA_DIR = os.getenv("DATA_DIR")
+
 #### source data path
-s_label = 'CelebAMask-HQ-label'
-s_img = 'CelebA-HQ-img'
+s_label = os.path.join(DATA_DIR, "CelebAMaskHQ-mask")
+s_img = os.path.join(DATA_DIR, "CelebA-HQ-img")
 #### destination training data path
-d_train_label = 'train_label'
-d_train_img = 'train_img'
+d_train_label = os.path.join(DATA_DIR, "train_label")
+d_train_img = os.path.join(DATA_DIR, "train_img")
 #### destination testing data path
-d_test_label = 'test_label'
-d_test_img = 'test_img'
+d_test_label = os.path.join(DATA_DIR, "test_label")
+d_test_img = os.path.join(DATA_DIR, "test_img")
 #### val data path
-d_val_label = 'val_label'
-d_val_img = 'val_img'
+d_val_label = os.path.join(DATA_DIR, "val_label")
+d_val_img = os.path.join(DATA_DIR, "val_img")
 
 #### make folder
 make_folder(d_train_label)
@@ -30,28 +35,48 @@ train_count = 0
 test_count = 0
 val_count = 0
 
-image_list = pd.read_csv('CelebA-HQ-to-CelebA-mapping.txt', delim_whitespace=True, header=None)
-f_train = open('train_list.txt', 'w')
-f_val = open('val_list.txt', 'w')
-f_test = open('test_list.txt', 'w')
+image_list = pd.read_csv(
+    os.path.join(DATA_DIR, "CelebA-HQ-to-CelebA-mapping.txt"), sep="\s+"
+)
+f_train = open(os.path.join(DATA_DIR, "train_list.txt"), "w")
+f_val = open(os.path.join(DATA_DIR, "val_list.txt"), "w")
+f_test = open(os.path.join(DATA_DIR, "test_list.txt"), "w")
 
-for idx, x in enumerate(image_list.loc[:, 1]):
-    print (idx, x)
+for idx, x in enumerate(image_list.iloc[:, 1]):
+    print(idx, x)
     if x >= 162771 and x < 182638:
-        copyfile(os.path.join(s_label, str(idx)+'.png'), os.path.join(d_val_label, str(val_count)+'.png'))
-        copyfile(os.path.join(s_img, str(idx)+'.jpg'), os.path.join(d_val_img, str(val_count)+'.jpg'))        
+        copyfile(
+            os.path.join(s_label, str(idx) + ".png"),
+            os.path.join(d_val_label, str(val_count) + ".png"),
+        )
+        copyfile(
+            os.path.join(s_img, str(idx) + ".jpg"),
+            os.path.join(d_val_img, str(val_count) + ".jpg"),
+        )
         val_count += 1
 
     elif x >= 182638:
-        copyfile(os.path.join(s_label, str(idx)+'.png'), os.path.join(d_test_label, str(test_count)+'.png'))
-        copyfile(os.path.join(s_img, str(idx)+'.jpg'), os.path.join(d_test_img, str(test_count)+'.jpg'))
-        test_count += 1 
+        copyfile(
+            os.path.join(s_label, str(idx) + ".png"),
+            os.path.join(d_test_label, str(test_count) + ".png"),
+        )
+        copyfile(
+            os.path.join(s_img, str(idx) + ".jpg"),
+            os.path.join(d_test_img, str(test_count) + ".jpg"),
+        )
+        test_count += 1
     else:
-        copyfile(os.path.join(s_label, str(idx)+'.png'), os.path.join(d_train_label, str(train_count)+'.png'))
-        copyfile(os.path.join(s_img, str(idx)+'.jpg'), os.path.join(d_train_img, str(train_count)+'.jpg'))
-        train_count += 1  
+        copyfile(
+            os.path.join(s_label, str(idx) + ".png"),
+            os.path.join(d_train_label, str(train_count) + ".png"),
+        )
+        copyfile(
+            os.path.join(s_img, str(idx) + ".jpg"),
+            os.path.join(d_train_img, str(train_count) + ".jpg"),
+        )
+        train_count += 1
 
-print (train_count + test_count + val_count)
+print(train_count + test_count + val_count)
 #### close the file
 f_train.close()
 f_val.close()

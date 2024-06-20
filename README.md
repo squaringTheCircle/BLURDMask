@@ -1,3 +1,11 @@
+# BLURD Mask
+
+BLURD Mask is a zero-shot domain adaption task built using the BLURD method and CelebAMask-HQ. The following repo is a fork of [CelebAMask-HQ](https://github.com/switchablenorms/CelebAMask-HQ) with modifications required to create the BLURD Mask datasets and evaluation code.
+
+Original Readme below
+
+---
+
 # CelebAMask-HQ
 
 [[Paper]](https://arxiv.org/abs/1907.11922) [[Demo]](https://www.youtube.com/watch?v=T1o38DFalWs)  
